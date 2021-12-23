@@ -13,6 +13,27 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 
+LOGIN_URL = "login"
+LOGOUT_URL = "logout"
+LOGIN_REDIRECT_URL = "home"
+
+SOCIAL_AUTH_GITHUB_KEY = os.environ.get("SOCIAL_AUTH_GITHUB_KEY")
+SOCIAL_AUTH_GITHUB_SECRET = os.environ.get("SOCIAL_AUTH_GITHUB_SECRET")
+
+
+AUTHENTICATION_BACKENDS = (
+    "social_core.backends.github.GithubOAuth2",
+    "django.contrib.auth.backends.ModelBackend",
+)
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    ]
+}
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIRS = os.path.join(BASE_DIR, "templates")
@@ -21,8 +42,9 @@ TEMPLATES_DIRS = os.path.join(BASE_DIR, "templates")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-)sfsv0#5-@lw0wjfbna8!2fa5@@r#5!ctt-nprpml59vq1xest"
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -41,7 +63,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "accounts",
     "blog",
-    "rest_framework"
+    "rest_framework",
+    "social_django",
 ]
 
 MIDDLEWARE = [
@@ -52,6 +75,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
 
 ROOT_URLCONF = "TheBlog.urls"
@@ -67,6 +91,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "social_django.context_processors.backends",
+                "social_django.context_processors.login_redirect",
             ],
         },
     },
