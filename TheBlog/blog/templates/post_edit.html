@@ -1,0 +1,25 @@
+{% extends 'base.html' %} {% block content %}
+
+<form action="." method="POST" role="form">
+  {% csrf_token %}
+  {{ post_form}}
+  <button type="submit">
+    Save Post
+  </button>
+</form>
+
+<small>
+  <form action="{% url 'post_delete' post.slug %}" method="POST">
+    {% csrf_token %}
+    <button type="submit" , name="post_id" , value="{{ post.slug }}">
+      Delete
+    </button>
+  </form>
+</small>
+
+
+</a>
+
+</div>
+
+{% endblock content %}

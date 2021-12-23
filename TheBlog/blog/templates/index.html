@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<a href='{% url "post_create" %}'>
+    Create Post
+</a>
+<br>
+{% for post in post_list %}
+<h1>{{ post.title }}</h1>
+<h3>by {{ post.author }} </h3>
+<p>{{post.content|safe}}</p>
+
+<span>Posted: {{ post.created_on}} </span>
+
+<a href="{% url 'post_detail' post.slug  %}">Read More &rarr;</a>
+
+<hr>
+{% endfor %}
+
+{%endblock%}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<form action="." method="POST" role="form">
+    <!-- the form from the context -->
+    {% csrf_token %}
+    {{ create_form }}
+    <hr><button type="submit">
+        Create Account
+    </button>
+</form>
+
+{% endblock content %}

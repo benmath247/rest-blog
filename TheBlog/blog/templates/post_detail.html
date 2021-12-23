@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ post.title }}</h1>
+{{ post.author }}| {{ post.created_on }}</p>
+<p>{{ post.content | safe }}</p>
+
+<!--Likes-->
+<div>
+  <form action="{% url 'like_post' post.pk %}" method="POST">{% csrf_token %}<button type="submit" , name="post_id" ,
+      value="{{ post.id }}">Like
+    </button> - {{ post.total_likes }} likes</form>
+</div>
+
+<!-- comments-->
+<hr>
+</h5>
+<h3>Comments:</h3>
+
+{% if not post.comments.all %}
+No comments yet...
+
+<br>
+{% else %}
+<br>
+{% for comment in post.comments.all %}
+<strong>
+  {{ comment.name }} - {{ comment.date_added }} {% if comment.likes.all %}|
+  <!--Comment likes--> {{ comment.total_likes }} likes{% endif %}<br>
+</strong>
+
+{{ comment.comment }}
+<small>
+  <form action="{% url 'like_comment' comment.pk %}" method="POST">
+    {% csrf_token %}
+    <button type="submit" , name="post_id" , value="{{ post.id }}">
+      like
+    </button>
+  </form>
+</small>
+{% endfor %}
+{% endif %}
+<br><br>
+<!--comments form -->
+<form action="{% url 'add_comment' post.pk %}" method="POST" role="form">
+  {% csrf_token %}
+  {{ comment_form }}<br>
+  <button type="submit">
+    Add comment
+  </button>
+</form>
+
+
+{% endblock content %}
