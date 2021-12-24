@@ -5,15 +5,17 @@ from django.shortcuts import get_object_or_404, redirect, render
 from blog.forms import CommentForm, PostCreateForm
 from blog.models import Comment, CommentLike, Like, Post
 
-
+#### POST MODEL CRUD ###
 def post_list(request):
+
+    #sort by date created
     queryset = Post.objects.order_by("-created_on")
     return render(request, "index.html", context={"post_list": queryset})
 
 
 def post_detail(request, slug):
+    #slug is used to define which Post object will display
     post = get_object_or_404(Post, slug=slug)
-    total_likes = "total_likes"
     comment_form = CommentForm()
     return render(
         request,
@@ -24,13 +26,16 @@ def post_detail(request, slug):
 
 def post_create(request):
     if request.method == "GET":
+        # take form from post forms.py and put it into context for post_create.html
         form = PostCreateForm()
         return render(request, "post_create.html", context={"post_form": form})
 
     if request.method == "POST":
+        #take fields from form and post them to db
         title = request.POST.get("title")
         content = request.POST.get("content")
-        instance = Post.objects.create(
+        # Create a new Post object
+        Post.objects.create(
             author=request.user,
             title=title,
             content=content,
@@ -38,10 +43,11 @@ def post_create(request):
         return redirect("home")
 
 
-def post_delete(request, slug):
-    post = get_object_or_404(Post, slug=slug)
-    post.delete()
-    return redirect("home")
+def post_delete(request, pk):
+    if request.method == "POST":
+        post = get_object_or_404(Post, slug=pk)
+        post.delete()
+        return redirect("home")
 
 
 def post_edit(request, slug):
@@ -59,8 +65,14 @@ def post_edit(request, slug):
         post.content = request.POST.get("content")
         post.status = request.POST.get("status")
         post.save()
-        return redirect("home")
+        comment_form = CommentForm()
+        return render(
+        request,
+        "post_detail.html",
+        context={"post": post, "comment_form": comment_form},
+    )
 
+#### COMMENT MODEL CRUD ####
 
 def add_comment(request, pk):
     if request.method == "GET":
@@ -73,7 +85,13 @@ def add_comment(request, pk):
         Comment.objects.create(post_id=pk, name=name, comment=comment)
         return redirect("home")
 
+def comment_delete(request, pk):
+    if request.method == "POST":
+        comment = get_object_or_404(Comment, pk=pk)
+        comment.delete()
+        return redirect("home")
 
+#### LIKE MODEL CRUD ####
 def like_view(request, pk):
     if request.method == "POST":
         post = get_object_or_404(Post, id=request.POST.get("post_id"))
@@ -82,7 +100,13 @@ def like_view(request, pk):
 
         return redirect("post_detail", slug=post.slug)
 
+def unlike_view(request, pk):
+    if request.method == "POST":
+        like = get_object_or_404(Like, pk=pk)
+        like.delete()
+        return redirect("home")
 
+#### COMMENT LIKE MODEL CRUD ### 
 def like_a_comment_view(request, pk):
     if request.method == "POST":
         post = get_object_or_404(Post, id=request.POST.get("post_id"))
@@ -93,3 +117,9 @@ def like_a_comment_view(request, pk):
         ):
             CommentLike.objects.create(comment=comment, user=request.user)
         return redirect("post_detail", slug=post.slug)
+
+def delete_comment_like(request, pk):
+    if request.method == "POST":
+        commentlike = get_object_or_404(CommentLike, pk=pk)
+        commentlike.delete()
+        return redirect("home")
