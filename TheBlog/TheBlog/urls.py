@@ -18,11 +18,11 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/", include("api.urls")),
     path(
         "oauth/", include("social_django.urls", namespace="social")
     ),  # register namespaces
     path("accounts/", include("accounts.urls")),
     path("", include("blog.urls")),
     path("api-auth/", include("rest_framework.urls")),
+    path('api/v1/', include('blog.routes'))
 ]

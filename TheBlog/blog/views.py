@@ -1,20 +1,30 @@
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from blog.forms import CommentForm, PostCreateForm
 from blog.models import Comment, CommentLike, Like, Post
 
+from blog.serializers import (
+    PostSerializer,
+    CommentLikeSerializer,
+    CommentSerializer,
+    LikeSerializer,
+)
+
 #### POST MODEL CRUD ###
 def post_list(request):
 
-    #sort by date created
+    # sort by date created
     queryset = Post.objects.order_by("-created_on")
     return render(request, "index.html", context={"post_list": queryset})
 
 
 def post_detail(request, slug):
-    #slug is used to define which Post object will display
+    # slug is used to define which Post object will display
     post = get_object_or_404(Post, slug=slug)
     comment_form = CommentForm()
     return render(
@@ -31,7 +41,7 @@ def post_create(request):
         return render(request, "post_create.html", context={"post_form": form})
 
     if request.method == "POST":
-        #take fields from form and post them to db
+        # take fields from form and post them to db
         title = request.POST.get("title")
         content = request.POST.get("content")
         # Create a new Post object
@@ -67,12 +77,14 @@ def post_edit(request, slug):
         post.save()
         comment_form = CommentForm()
         return render(
-        request,
-        "post_detail.html",
-        context={"post": post, "comment_form": comment_form},
-    )
+            request,
+            "post_detail.html",
+            context={"post": post, "comment_form": comment_form},
+        )
+
 
 #### COMMENT MODEL CRUD ####
+
 
 def add_comment(request, pk):
     if request.method == "GET":
@@ -85,11 +97,13 @@ def add_comment(request, pk):
         Comment.objects.create(post_id=pk, name=name, comment=comment)
         return redirect("home")
 
+
 def comment_delete(request, pk):
     if request.method == "POST":
         comment = get_object_or_404(Comment, pk=pk)
         comment.delete()
         return redirect("home")
+
 
 #### LIKE MODEL CRUD ####
 def like_view(request, pk):
@@ -100,13 +114,15 @@ def like_view(request, pk):
 
         return redirect("post_detail", slug=post.slug)
 
+
 def unlike_view(request, pk):
     if request.method == "POST":
         like = get_object_or_404(Like, pk=pk)
         like.delete()
         return redirect("home")
 
-#### COMMENT LIKE MODEL CRUD ### 
+
+#### COMMENT LIKE MODEL CRUD ###
 def like_a_comment_view(request, pk):
     if request.method == "POST":
         post = get_object_or_404(Post, id=request.POST.get("post_id"))
@@ -117,6 +133,7 @@ def like_a_comment_view(request, pk):
         ):
             CommentLike.objects.create(comment=comment, user=request.user)
         return redirect("post_detail", slug=post.slug)
+
 
 def delete_comment_like(request, pk):
     if request.method == "POST":
