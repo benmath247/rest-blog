@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "blog",
     "rest_framework",
     "social_django",
+    'api',
 ]
 
 MIDDLEWARE = [
