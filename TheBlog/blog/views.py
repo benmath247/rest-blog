@@ -4,11 +4,21 @@ from rest_framework.decorators import api_view
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.response import Response
 
+import requests
+
 from blog.forms import CommentForm, PostCreateForm
 from blog.models import Comment, CommentLike, Like, Post
 from blog.serializers import (CommentLikeSerializer, CommentSerializer,
                               LikeSerializer, PostSerializer)
 
+
+def bitcoin_price(request):
+    response = requests.get('https://api.coindesk.com/v1/bpi/currentprice.json')
+    data = response.json()
+    usd = data["bpi"]["USD"]["rate"]
+    gbp = data["bpi"]["GBP"]["rate"]
+    eur = data["bpi"]["EUR"]["rate"]
+    return render(request, "bitcoin_price.html", context={"usd_btc": usd, "gbp_btc": gbp, "eur_btc": eur})
 
 #### POST MODEL CRUD ###
 def post_list(request):
