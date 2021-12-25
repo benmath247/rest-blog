@@ -1,19 +1,14 @@
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
-
-from rest_framework.generics import ListCreateAPIView
 from rest_framework.decorators import api_view
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.response import Response
 
 from blog.forms import CommentForm, PostCreateForm
 from blog.models import Comment, CommentLike, Like, Post
+from blog.serializers import (CommentLikeSerializer, CommentSerializer,
+                              LikeSerializer, PostSerializer)
 
-from blog.serializers import (
-    PostSerializer,
-    CommentLikeSerializer,
-    CommentSerializer,
-    LikeSerializer,
-)
 
 #### POST MODEL CRUD ###
 def post_list(request):

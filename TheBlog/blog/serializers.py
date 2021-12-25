@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from blog.models import Comment, CommentLike, Post, Like
+
+from blog.models import Comment, CommentLike, Like, Post
 
 all = '__all__'
 

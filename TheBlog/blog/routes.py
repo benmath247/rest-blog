@@ -1,19 +1,11 @@
 from django.urls import path
 
-from blog.api import (
-    PostListAPIView, 
-    CommentLikeListAPIView, 
-    CommentListAPIView, 
-    LikeListAPIView, 
-    PostDestroyAPIView, 
-    LikeDestroyAPIView,
-    CommentDestroyAPIView,
-    CommentLikeDestroyAPIView,
-    PostRetrieveUpdateAPIView,
-    LikeRetrieveAPIView,
-    CommentRetrieveAPIView,
-    CommentLikeRetrieveAPIView
-    )
+from blog.api import (CommentDestroyAPIView, CommentLikeDestroyAPIView,
+                      CommentLikeListAPIView, CommentLikeRetrieveAPIView,
+                      CommentListAPIView, CommentRetrieveAPIView,
+                      LikeDestroyAPIView, LikeListAPIView, LikeRetrieveAPIView,
+                      PostDestroyAPIView, PostListAPIView,
+                      PostRetrieveUpdateAPIView)
 
 urlpatterns = [
     path("posts/", PostListAPIView.as_view(), name="post-list-api-view"),

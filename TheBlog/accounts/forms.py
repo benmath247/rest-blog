@@ -2,6 +2,7 @@ from django import forms
 
 from accounts.models import User
 
+
 class AccountCreateForm(forms.ModelForm):
     class Meta:
         password = forms.CharField(widget=forms.PasswordInput)

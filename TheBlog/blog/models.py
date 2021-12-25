@@ -1,7 +1,7 @@
 from django.db import models
-from django.db import models
 from django.utils.functional import cached_property
 from django.utils.text import slugify
+
 from accounts.models import User
 
 

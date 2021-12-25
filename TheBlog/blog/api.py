@@ -1,22 +1,19 @@
 from typing import List
+
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
-
-from rest_framework.generics import ListCreateAPIView, DestroyAPIView, RetrieveUpdateAPIView, RetrieveAPIView
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.generics import (DestroyAPIView, ListCreateAPIView,
+                                     RetrieveAPIView, RetrieveUpdateAPIView)
+from rest_framework.response import Response
 
 from blog.forms import CommentForm, PostCreateForm
 from blog.models import Comment, CommentLike, Like, Post
+from blog.serializers import (CommentLikeSerializer, CommentSerializer,
+                              LikeSerializer, PostCreateSerializer,
+                              PostSerializer)
 
-from blog.serializers import (
-    PostSerializer,
-    CommentLikeSerializer,
-    CommentSerializer,
-    LikeSerializer,
-    PostCreateSerializer,
-)
 # RetrieveUpdateAPIView - get requests retrieves 1, put request updates 1
 # look at mixins 
 ### POST CRUD ###
