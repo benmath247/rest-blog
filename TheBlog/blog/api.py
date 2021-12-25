@@ -2,7 +2,7 @@ from typing import List
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 
-from rest_framework.generics import ListCreateAPIView, DestroyAPIView
+from rest_framework.generics import ListCreateAPIView, DestroyAPIView, RetrieveUpdateAPIView, RetrieveAPIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
@@ -17,10 +17,11 @@ from blog.serializers import (
     LikeSerializer,
     PostCreateSerializer,
 )
-
+# RetrieveUpdateAPIView - get requests retrieves 1, put request updates 1
+# look at mixins 
 ### POST CRUD ###
 
-# LIST
+# LIST/CREATE
 class PostListAPIView(ListCreateAPIView):
 
     serializer_class = PostSerializer
@@ -48,10 +49,16 @@ class PostDestroyAPIView(DestroyAPIView):
     def get_queryset(self, *args, **kwargs):
         return Post.objects.all()
 
+# RETRIEVE/UPDATE
+class PostRetrieveUpdateAPIView(RetrieveUpdateAPIView):
+    serializer_class = PostSerializer
 
+    def get_queryset(self, *args, **kwargs):
+        return Post.objects.filter(author = self.request.user)
+    
 ### LIKE CRUD ###
 
-# LIST
+# LIST/CREATE
 class LikeListAPIView(ListCreateAPIView):
     serializer_class = LikeSerializer
 
@@ -66,10 +73,15 @@ class LikeDestroyAPIView(DestroyAPIView):
     def get_queryset(self, *args, **kwargs):
         return Like.objects.all()
 
+# RETRIEVE/UPDATE
+class LikeRetrieveAPIView(RetrieveAPIView):
+    serializer_class = LikeSerializer
+    queryset = Like.objects.all()
+
 
 ### COMMENT CRUD
 
-# LIST
+# LIST/CREATE
 class CommentListAPIView(ListCreateAPIView):
 
     serializer_class = CommentSerializer
@@ -85,10 +97,15 @@ class CommentDestroyAPIView(DestroyAPIView):
     def get_queryset(self, *args, **kwargs):
         return Comment.objects.all()
 
+# RETRIEVE/UPDATE
+class CommentRetrieveAPIView(RetrieveUpdateAPIView):
+    serializer_class = CommentSerializer
+    queryset = Comment.objects.all()
+
 
 ### COMMENT LIKE CRUD
 
-# LIST
+# LIST/CREATE
 class CommentLikeListAPIView(ListCreateAPIView):
 
     serializer_class = CommentLikeSerializer
@@ -103,3 +120,8 @@ class CommentLikeDestroyAPIView(DestroyAPIView):
 
     def get_queryset(self, *args, **kwargs):
         return CommentLike.objects.all()
+
+# RETRIEVE/UPDATE
+class CommentLikeRetrieveAPIView(RetrieveAPIView):
+    serializer_class = CommentLikeSerializer
+    queryset = CommentLike.objects.all()

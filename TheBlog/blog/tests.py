@@ -4,23 +4,17 @@ from django.shortcuts import reverse
 from blog.models import Comment, CommentLike, Post, Like
 from accounts.models import User
 from rest_framework.test import APITestCase
-
+from accounts.factories import UserFactory
+from blog.factories import PostFactory, CommentFactory, LikeFactory, CommentLikeFactory
 # Create your tests here.
-
 
 class PostListTestCase(APITestCase):
     def setUp(self):
-        user = User.objects.create(email="example@gmail.com")
+        user = UserFactory()
+        self.post_1 = PostFactory(author=user)
 
-        self.post_1 = Post.objects.create(
-            author=user, content="my content1", title="my title1"
-        )
-        self.post_2 = Post.objects.create(
-            author=user, content="my content2", title="my title2"
-        )
-        self.post_3 = Post.objects.create(
-            author=user, content="my content3", title="my title3"
-        )
+        self.post_2 = PostFactory(author=user)
+        self.post_3 = PostFactory(author=user)
         self.user=user
 
     @property
@@ -44,10 +38,12 @@ class PostListTestCase(APITestCase):
 
 class PostDestroyTestCase(APITestCase):
     def setUp(self):
-        user = User.objects.create(email="example@gmail.com")
-        self.post_1 = Post.objects.create(
-            author=user, content="my content1", title="my title1"
-        )
+        # user = User.objects.create(email="example@gmail.com")
+        # self.post_1 = Post.objects.create(
+        #     author=user, content="my content1", title="my title1"
+        # )
+        user = UserFactory()
+        self.post_1 = PostFactory(author=user)
 
     @property
     def url(self):
@@ -58,22 +54,56 @@ class PostDestroyTestCase(APITestCase):
         self.assertEqual(res.status_code, 204)
         self.assertEqual(len(Post.objects.all()), 0)
 
-class CommentListTestCase(APITestCase):
+class PostRetrieveTestCase(APITestCase):
     def setUp(self):
-        user = User.objects.create(email="example@gmail.com")
-
-        self.post_1 = Post.objects.create(
-            author=user, content="my content1", title="my title1"
-        )
-
-        for i in range(10):
-            post_comment = Comment.objects.create(
-                post=self.post_1, name="my name", comment="my comment"
-            )
+        # user = User.objects.create(email="example@gmail.com"
+        # )
+        # self.post = Post.objects.create(
+        #     author=user, content="my content1", title="my title1"
+        # )
+        user = UserFactory()
+        self.post = PostFactory(author=user)
+        self.user=user
 
     @property
     def url(self):
-        return reverse("comment-list-api-view", kwargs={"slug": self.post_1.slug})
+        return reverse("post-retrieve-api-view", kwargs={"pk": self.post.pk})
+
+    def test_get(self):
+        self.client.force_login(self.user)
+        res = self.client.get(self.url)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.json()["id"], self.post.id)
+    
+    def test_put(self):
+        self.client.force_login(self.user)
+        data = {"title": "title", "content": "content2", "slug":"slug", "author":self.user.pk}
+        res = self.client.put(self.url, data=data)
+        self.assertEqual(res.status_code, 200)
+        self.post.refresh_from_db()
+        self.assertEqual(res.json()["content"], self.post.content)
+
+
+class CommentListTestCase(APITestCase):
+    def setUp(self):
+        # user = User.objects.create(email="example@gmail.com")
+
+        # self.post_1 = Post.objects.create(
+        #     author=user, content="my content1", title="my title1"
+        # )
+
+        # for i in range(10):
+        #     post_comment = Comment.objects.create(
+        #         post=self.post_1, name="my name", comment="my comment"
+        #     )
+        self.user = UserFactory()
+        self.post = PostFactory(author=self.user)
+        for i in range(10):
+            post_comment = CommentFactory(post=self.post)
+
+    @property
+    def url(self):
+        return reverse("comment-list-api-view", kwargs={"slug": self.post.slug})
 
     def test_get(self):
         res = self.client.get(self.url)
@@ -81,7 +111,6 @@ class CommentListTestCase(APITestCase):
         self.assertEqual(len(res.json()), 10)
 
     def test_post(self):
-        self.user= User.objects.get(email="example@gmail.com")
         self.client.force_login(self.user)
         self.post_2 = Post.objects.create(
             author=self.user, content="my content1", title="my title2"
@@ -93,13 +122,16 @@ class CommentListTestCase(APITestCase):
 
 class CommentDestroyTestCase(APITestCase):
     def setUp(self):
-        user = User.objects.create(email="example@gmail.com")
-        self.post_1 = Post.objects.create(
-            author=user, content="my content1", title="my title1"
-        )
-        self.post_comment = Comment.objects.create(
-            post=self.post_1, name="my name", comment="my comment"
-        )
+        # user = User.objects.create(email="example@gmail.com")
+        # self.post_1 = Post.objects.create(
+        #     author=user, content="my content1", title="my title1"
+        # )
+        # self.post_comment = Comment.objects.create(
+        #     post=self.post_1, name="my name", comment="my comment"
+        # )
+        user = UserFactory()
+        self.post = PostFactory(author=user)
+        self.post_comment = CommentFactory(post=self.post)
     
     @property
     def url(self):
@@ -112,9 +144,12 @@ class CommentDestroyTestCase(APITestCase):
 
 class LikeListTestCase(APITestCase):
     def setUp(self):
-        user = User.objects.create(email="example@gmail.com")
-        self.post = Post.objects.create(author=user, content="my content1", title="my title1")
-        self.like = Like.objects.create(post=self.post, user=user)
+        # user = User.objects.create(email="example@gmail.com")
+        # self.post = Post.objects.create(author=user, content="my content1", title="my title1")
+        # self.like = Like.objects.create(post=self.post, user=user)
+        self.user = UserFactory()
+        self.post = PostFactory(author=self.user)
+        self.like = LikeFactory(post=self.post, user=self.user)
     
     @property
     def url(self):
@@ -126,11 +161,11 @@ class LikeListTestCase(APITestCase):
         self.assertEqual(len(res.json()), 1)
 
     def test_post(self):
-        self.user = User.objects.get(email="example@gmail.com")
-        self.client.force_login(self.user)
-        self.post = Post.objects.create(
-            author=self.user, content="my content1", title="my title2"
-        )
+        # self.user = User.objects.get(email="example@gmail.com")
+        # self.client.force_login(self.user)
+        # self.post = Post.objects.create(
+        #     author=self.user, content="my content1", title="my title2"
+        # )
         data = {"user": self.user.pk, "post": self.post.pk}
         res = self.client.post(self.url, data=data)
         self.assertEqual(res.status_code, 201)
@@ -138,13 +173,16 @@ class LikeListTestCase(APITestCase):
 
 class LikeDestroyTestCase(APITestCase):
     def setUp(self):
-        user = User.objects.create(email="example@gmail.com")
-        self.post_1 = Post.objects.create(author=user, content="my content1", title="my title1")
-        self.like_1 = Like.objects.create(post=self.post_1, user=user)
+        # user = User.objects.create(email="example@gmail.com")
+        # self.post = Post.objects.create(author=user, content="my content1", title="my title1")
+        # self.like = Like.objects.create(post=self.post_1, user=user)
+        user = UserFactory()
+        self.post = PostFactory(author=user)
+        self.like = LikeFactory(post=self.post, user=user)
     
     @property
     def url(self):
-        return reverse("like-destroy-api-view", kwargs={"pk": self.like_1.pk})
+        return reverse("like-destroy-api-view", kwargs={"pk": self.like.pk})
 
     def test_delete(self):
         res = self.client.delete(self.url)
@@ -154,16 +192,20 @@ class LikeDestroyTestCase(APITestCase):
 
 class CommentLikeListTestCase(APITestCase):
     def setUp(self):
-        user = User.objects.create(email="example@gmail.com")
-        self.post_1 = Post.objects.create(
-            author=user, content="my content1", title="my title1"
-        )
-        self.post_comment = Comment.objects.create(post=self.post_1, name="my name", comment="my comment")
-        self.comment_like = CommentLike.objects.create(comment = self.post_comment, user=user)
-    
+        # user = User.objects.create(email="example@gmail.com")
+        # self.post_1 = Post.objects.create(
+        #     author=user, content="my content1", title="my title1"
+        # )
+        # self.post_comment = Comment.objects.create(post=self.post_1, name="my name", comment="my comment")
+        # self.comment_like = CommentLike.objects.create(comment = self.post_comment, user=user)
+        user = UserFactory()
+        self.post = PostFactory(author=user)
+        self.comment = CommentFactory(post=self.post)
+        self.comment_like = CommentLikeFactory(comment=self.comment, user=user)
+
     @property
     def url(self):
-        return reverse('comment-like-list-api-view', kwargs ={"pk": self.post_comment.pk})
+        return reverse('comment-like-list-api-view', kwargs ={"pk": self.comment.pk})
 
     def test_get(self):
         res = self.client.get(self.url)
@@ -171,14 +213,14 @@ class CommentLikeListTestCase(APITestCase):
         self.assertEqual(len(res.json()), 1)
 
     def test_post(self):
-        self.user = User.objects.get(email="example@gmail.com")
+        self.user = UserFactory()
         self.client.force_login(self.user)
-        self.post = Post.objects.create(
-            author=self.user, content="my content1", title="my title2"
-        )
-        self.comment = Comment.objects.create(
-            post=self.post, name="my name", comment="my comment"
-        )
+        # self.post = Post.objects.create(
+        #     author=self.user, content="my content1", title="my title2"
+        # )
+        # self.comment = Comment.objects.create(
+        #     post=self.post, name="my name", comment="my comment"
+        # )
         data = {"user": self.user.pk, "post": self.post.pk, "comment": self.comment.pk}
         res = self.client.post(self.url, data=data)
         self.assertEqual(res.status_code, 201)
@@ -186,16 +228,20 @@ class CommentLikeListTestCase(APITestCase):
         
 class CommentLikeDestroyTestCase(APITestCase):
     def setUp(self):
-        user = User.objects.create(email="example@gmail.com")
-        self.post_1 = Post.objects.create(
-            author=user, content="my content1", title="my title1"
-        )
-        self.post_comment = Comment.objects.create(post=self.post_1, name="my name", comment="my comment")
-        self.comment_like = CommentLike.objects.create(comment = self.post_comment, user=user)
+        # user = User.objects.create(email="example@gmail.com")
+        # self.post_1 = Post.objects.create(
+        #     author=user, content="my content1", title="my title1"
+        # )
+        # self.post_comment = Comment.objects.create(post=self.post_1, name="my name", comment="my comment")
+        # self.comment_like = CommentLike.objects.create(comment = self.post_comment, user=user)
+        user = UserFactory()
+        self.post = PostFactory(author=user)
+        self.comment = CommentFactory(post=self.post)
+        self.comment_like = CommentLikeFactory(comment=self.comment, user=user)
 
     @property
     def url(self):
-        return reverse('comment-like-destroy-api-view', kwargs ={"pk": self.post_comment.pk})
+        return reverse('comment-like-destroy-api-view', kwargs ={"pk": self.comment.pk})
 
     def test_delete(self):
         res = self.client.delete(self.url)

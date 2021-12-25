@@ -11,7 +11,7 @@ class PostSerializer(serializers.ModelSerializer):
 class PostCreateSerializer(serializers.Serializer):
     title = serializers.CharField()
     content = serializers.CharField()
-    
+
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
