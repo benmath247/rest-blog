@@ -61,9 +61,8 @@ class PostRetrieveTestCase(APITestCase):
         # self.post = Post.objects.create(
         #     author=user, content="my content1", title="my title1"
         # )
-        user = UserFactory()
-        self.post = PostFactory(author=user)
-        self.user=user
+        self.user = UserFactory()
+        self.post = PostFactory(author=self.user)
 
     @property
     def url(self):
@@ -140,6 +139,16 @@ class CommentDestroyTestCase(APITestCase):
     def test_delete(self):
         res = self.client.delete(self.url)
         self.assertEqual(res.status_code, 204)
+
+class CommentRetrieveTestCase(APITestCase):
+    def setUp(self):
+        user = UserFactory()
+        self.post = PostFactory(author=user)
+        self.comment = CommentFactory(post=self.post, user=user)
+    
+    @property
+    def url(self):
+        return reverse('comment-retrieve-api-view', kwargs={"pk", self.comment.pk})
 
 
 class LikeListTestCase(APITestCase):
