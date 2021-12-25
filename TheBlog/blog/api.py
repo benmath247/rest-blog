@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework.generics import ListCreateAPIView, DestroyAPIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework import status
 
 from blog.forms import CommentForm, PostCreateForm
 from blog.models import Comment, CommentLike, Like, Post
@@ -14,6 +15,7 @@ from blog.serializers import (
     CommentLikeSerializer,
     CommentSerializer,
     LikeSerializer,
+    PostCreateSerializer,
 )
 
 ### POST CRUD ###
@@ -24,6 +26,20 @@ class PostListAPIView(ListCreateAPIView):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
 
+
+    def create(self, *args, **kwargs):
+        serializer = PostCreateSerializer(data={
+            "title": self.request.POST.get('title'), 
+            "content": self.request.POST.get('content')
+        })
+        if serializer.is_valid():
+            data = serializer.data
+            data['author'] = self.request.user
+            Post.objects.create(**data)
+            # Post.objects.create(title=data['title'], content=data['content'], author=data['author'])
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
 
 # DESTROY
 class PostDestroyAPIView(DestroyAPIView):

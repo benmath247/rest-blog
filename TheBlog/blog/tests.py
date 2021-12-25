@@ -21,6 +21,7 @@ class PostListTestCase(APITestCase):
         self.post_3 = Post.objects.create(
             author=user, content="my content3", title="my title3"
         )
+        self.user=user
 
     @property
     def url(self):
@@ -33,6 +34,13 @@ class PostListTestCase(APITestCase):
         self.assertEqual(res.json()[0]["title"], self.post_3.title)
         self.assertEqual(res.json()[1]["title"], self.post_2.title)
         self.assertEqual(res.json()[2]["title"], self.post_1.title)
+
+    def test_post(self):
+        self.client.force_login(self.user)
+        data = {"title": "title", "content": "content"}
+        res = self.client.post(self.url, data=data)
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual(len(Post.objects.all()), 4)
 
 class PostDestroyTestCase(APITestCase):
     def setUp(self):
@@ -49,7 +57,6 @@ class PostDestroyTestCase(APITestCase):
         res = self.client.delete(self.url)
         self.assertEqual(res.status_code, 204)
         self.assertEqual(len(Post.objects.all()), 0)
-
 
 class CommentListTestCase(APITestCase):
     def setUp(self):
@@ -73,6 +80,17 @@ class CommentListTestCase(APITestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(len(res.json()), 10)
 
+    def test_post(self):
+        self.user= User.objects.get(email="example@gmail.com")
+        self.client.force_login(self.user)
+        self.post_2 = Post.objects.create(
+            author=self.user, content="my content1", title="my title2"
+        )
+        data = {"post": self.post_2.pk, "name": "name", "comment": "comment"}
+        res = self.client.post(self.url, data=data)
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual(len(Comment.objects.all()), 11)
+
 class CommentDestroyTestCase(APITestCase):
     def setUp(self):
         user = User.objects.create(email="example@gmail.com")
@@ -92,7 +110,6 @@ class CommentDestroyTestCase(APITestCase):
         self.assertEqual(res.status_code, 204)
 
 
-
 class LikeListTestCase(APITestCase):
     def setUp(self):
         user = User.objects.create(email="example@gmail.com")
@@ -107,6 +124,17 @@ class LikeListTestCase(APITestCase):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(len(res.json()), 1)
+
+    def test_post(self):
+        self.user = User.objects.get(email="example@gmail.com")
+        self.client.force_login(self.user)
+        self.post = Post.objects.create(
+            author=self.user, content="my content1", title="my title2"
+        )
+        data = {"user": self.user.pk, "post": self.post.pk}
+        res = self.client.post(self.url, data=data)
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual(len(Like.objects.all()), 2)
 
 class LikeDestroyTestCase(APITestCase):
     def setUp(self):
@@ -142,6 +170,20 @@ class CommentLikeListTestCase(APITestCase):
         self.assertEqual(res.status_code, 200)
         self.assertEqual(len(res.json()), 1)
 
+    def test_post(self):
+        self.user = User.objects.get(email="example@gmail.com")
+        self.client.force_login(self.user)
+        self.post = Post.objects.create(
+            author=self.user, content="my content1", title="my title2"
+        )
+        self.comment = Comment.objects.create(
+            post=self.post, name="my name", comment="my comment"
+        )
+        data = {"user": self.user.pk, "post": self.post.pk, "comment": self.comment.pk}
+        res = self.client.post(self.url, data=data)
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual(len(CommentLike.objects.all()), 2)
+        
 class CommentLikeDestroyTestCase(APITestCase):
     def setUp(self):
         user = User.objects.create(email="example@gmail.com")
