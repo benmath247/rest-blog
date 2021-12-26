@@ -1,17 +1,7 @@
-runserver:
-	- python3 manage.py runserver
-
-makemigrations:
+run:
 	- python3 manage.py makemigrations
-
-migrate:
 	- python3 manage.py migrate
-
-add .:
-	- git add .
-
-push:
-	- git push .
+	- python3 manage.py runserver
 
 test:
 	- python3 manage.py test
