@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 {% block content %}
 <form action="." method="POST" role="form">
     <!-- the form from the context -->
     {% csrf_token %}
-    {{ create_form }}
+    {{ create_form|crispy }}
     <hr><button type="submit">
         Create Account
     </button>

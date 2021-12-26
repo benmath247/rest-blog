@@ -9,6 +9,7 @@ class PostFactory(factory.django.DjangoModelFactory):
 
     title = factory.Sequence(lambda n: f'Post Title {n}')
     content = factory.Faker('text')
+    image = factory.django.ImageField(width=1024, height=768)
 
 class CommentFactory(factory.django.DjangoModelFactory):
     class Meta:

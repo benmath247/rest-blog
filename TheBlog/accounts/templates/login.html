@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-
+{% load crispy_forms_tags %}
 <a href="{% url 'create_account' %}">Create Account</a>
 {{ error }}
 <br>
 <form action="." method="POST" role="form">
     {% csrf_token %}
-    {{ login_form }}
+    {{ login_form|crispy }}
     <button type="submit">Login</button>
 </form>
 <p><strong>-- OR --</strong></p>
