@@ -1,14 +1,11 @@
 import requests
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
-from rest_framework.decorators import api_view
-from rest_framework.generics import ListCreateAPIView
-from rest_framework.response import Response
+from TheBlog.blog.models import PostReaction
 
-from blog.forms import CommentForm, PostCreateForm
-from blog.models import Comment, CommentLike, Like, Post
-from blog.serializers import (CommentLikeSerializer, CommentSerializer,
-                              LikeSerializer, PostSerializer)
+
+from blog.forms import CommentForm, PostCreateForm, PostReactionForm
+from blog.models import Comment, CommentLike, Like, Post, PostReaction
 
 
 def bitcoin_price(request):
@@ -146,3 +143,19 @@ def delete_comment_like(request, pk):
         commentlike = get_object_or_404(CommentLike, pk=pk)
         commentlike.delete()
         return redirect("home")
+
+
+#### POSTREACTION MODEL CRUD ####
+def reaction_view(request, pk):
+    if request.method == "GET":
+        form = PostReactionForm()
+        return render(request, "post_reaction.html", context={"reaction_form": form})
+    if request.method == "POST":
+        post = get_object_or_404(Post, id=request.POST.get("post_id"))
+        PostReaction.objects.create(post=post, user=request.user)
+        return redirect("post_detail", slug=post.slug)
+    if request.method == "DELETE":
+        reaction = get_object_or_404(PostReaction, pk=pk)
+        post = get_object_or_404(Post, id=request.POST.get("post_id"))
+        reaction.delete()
+        return redirect("post_detail", slug=post.slug)
