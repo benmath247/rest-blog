@@ -1,10 +1,9 @@
+import requests
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from rest_framework.decorators import api_view
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.response import Response
-
-import requests
 
 from blog.forms import CommentForm, PostCreateForm
 from blog.models import Comment, CommentLike, Like, Post
@@ -35,7 +34,7 @@ def post_detail(request, slug):
     return render(
         request,
         "post_detail.html",
-        context={"post": post, "comment_form": comment_form},
+        context={"post": post, "comment_form": comment_form}
     )
 
 
@@ -49,11 +48,13 @@ def post_create(request):
         # take fields from form and post them to db
         title = request.POST.get("title")
         content = request.POST.get("content")
+        image = request.FILES.get("image")
         # Create a new Post object
         Post.objects.create(
             author=request.user,
             title=title,
             content=content,
+            image=image
         )
         return redirect("home")
 

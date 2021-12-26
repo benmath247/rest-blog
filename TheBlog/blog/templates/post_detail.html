@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <h1>{{ post.title }}</h1>
 {{ post.author }}| {{ post.created_on }}</p>
 <p>{{ post.content | safe }}</p>
+{{ post.image.url}}
+<img src="{{ post.image.url }}">
+
 
 <!--Likes-->
 <div>

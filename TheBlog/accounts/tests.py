@@ -1,9 +1,10 @@
-from django.test import TestCase
 from django.shortcuts import reverse
+from django.test import TestCase
 from rest_framework.test import APITestCase
 
 from accounts.factories import UserFactory
 from accounts.models import User
+
 
 # Create your tests here.
 class UserListTestCase(APITestCase):

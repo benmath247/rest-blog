@@ -4,12 +4,9 @@ from blog.models import Comment, Post
 
 
 class PostCreateForm(forms.ModelForm):
-
-    choices = [("coding", "coding"), ("life", "life"), ("nyc", "nyc")]
-
     class Meta:
         model = Post
-        fields = ["title", "content"]
+        fields = ["title", "content", "image"]
 
 
 class CommentForm(forms.ModelForm):

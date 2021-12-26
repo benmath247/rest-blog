@@ -1,6 +1,9 @@
-from accounts.serializers import UserSerializer
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, DestroyAPIView
+from rest_framework.generics import (DestroyAPIView, ListCreateAPIView,
+                                     RetrieveAPIView)
+
 from accounts.models import User
+from accounts.serializers import UserSerializer
+
 
 class UserListAPIView(ListCreateAPIView):
     serializer_class = UserSerializer
