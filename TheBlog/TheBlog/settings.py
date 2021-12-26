@@ -18,8 +18,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIRS = os.path.join(BASE_DIR, "templates")
 
 # #s3 configuration
-AWS_ACCESS_KEY_ID = 'AKIA2ZTDG6GOFNQ4LMGC'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = 'bensblogattachments'
 AWS_S3_FILE_OVERWRITE = False
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
