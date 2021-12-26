@@ -51,6 +51,8 @@ class PostRetrieveUpdateAPIView(RetrieveUpdateAPIView):
     serializer_class = PostSerializer
 
     def get_queryset(self, *args, **kwargs):
+        if self.request.method == 'GET':
+            return Post.objects.all()
         return Post.objects.filter(author = self.request.user)
     
 ### LIKE CRUD ###

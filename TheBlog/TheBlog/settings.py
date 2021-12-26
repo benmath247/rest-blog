@@ -20,25 +20,29 @@ TEMPLATES_DIRS = os.path.join(BASE_DIR, "templates")
 # #s3 configuration
 AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-AWS_STORAGE_BUCKET_NAME = 'bensblogattachments'
+AWS_STORAGE_BUCKET_NAME = "bensblogattachments"
 AWS_S3_FILE_OVERWRITE = False
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-AWS_LOCATION = 'static/'
-STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
+AWS_LOCATION = "static/"
+STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
 
-#Storage config
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# Storage config
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
 STATIC_URL = "/static/"
 MEDIA_URL = "/media/"
 
 # local hosting static files
-# MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, "static"),
-# )
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+
+MEDIA_URL = "/mediafiles/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
+
 
 LOGIN_URL = "login"
 LOGOUT_URL = "logout"
@@ -52,7 +56,6 @@ AUTHENTICATION_BACKENDS = (
     "social_core.backends.github.GithubOAuth2",
     "django.contrib.auth.backends.ModelBackend",
 )
-
 
 
 # Quick-start development settings - unsuitable for production
@@ -82,7 +85,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "social_django",
     "storages",
-    'crispy_forms',
+    "crispy_forms",
 ]
 
 MIDDLEWARE = [
