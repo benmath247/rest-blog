@@ -39,6 +39,9 @@ class Comment(models.Model):
     name = models.CharField(max_length=25)
     comment = models.CharField(max_length=180, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, related_name="comments"
+    )
 
     def __str__(self):
         return "%s = %s" % (self.post.title, self.name)
