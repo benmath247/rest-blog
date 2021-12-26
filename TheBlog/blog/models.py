@@ -61,3 +61,17 @@ class CommentLike(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="comment_likes"
     )
+
+class PostReaction(models.Model):
+    class Reactions(models.TextChoices):
+        LIKE = 'LIKE'
+        LOVE = 'LOVE'
+        SAD = 'SAD'
+        ANGRY = 'ANGRY'
+        FIRE = 'FIRE'
+        CLAP = 'CLAP'
+
+    reaction = models.CharField(max_length=10,choices=Reactions.choices, null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_reactions")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_reactions")
+

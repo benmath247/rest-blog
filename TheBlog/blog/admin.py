@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin.filters import ListFilter
 
-from .models import Comment, Like, Post
+from .models import Comment, Like, Post, PostReaction
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -17,8 +17,15 @@ class LikeAdmin(admin.ModelAdmin):
     list_display = ("user", "post")
     list_filter = ("user", "post")
 
-
 admin.site.register(Like, LikeAdmin)
+
+
+class PostReactionAdmin(admin.ModelAdmin):
+    list_display = ("user", "post", "reaction")
+
+admin.site.register(PostReaction, PostReactionAdmin)
+
+
 
 
 class CommentAdmin(admin.ModelAdmin):
