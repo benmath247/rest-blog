@@ -147,7 +147,7 @@ class CommentRetrieveTestCase(APITestCase):
     def setUp(self):
         self.user = UserFactory()
         self.post = PostFactory(author=self.user)
-        self.comment = CommentFactory(post=self.post)
+        self.comment = CommentFactory(post=self.post, user=self.user)
     
     @property
     def url(self):

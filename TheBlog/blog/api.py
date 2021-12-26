@@ -99,7 +99,10 @@ class CommentDestroyAPIView(DestroyAPIView):
 # RETRIEVE/UPDATE
 class CommentRetrieveAPIView(RetrieveUpdateAPIView):
     serializer_class = CommentSerializer
-    queryset = Comment.objects.all()
+    def get_queryset(self, *args, **kwargs):
+        if self.request.method == 'GET':
+            return Comment.objects.all()
+        return Comment.objects.filter(user = self.request.user)
 
 
 ### COMMENT LIKE CRUD
