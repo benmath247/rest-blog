@@ -40,27 +40,27 @@ class Post(models.Model):
     
     @cached_property
     def total_loves_reactions(self):
-        likes =self.post_reactions.filter(reaction="LIKE")
+        likes =self.post_reactions.filter(reaction="LOVE")
         return likes.count()
 
     @cached_property
     def total_sad_reactions(self):
-        likes =self.post_reactions.filter(reaction="LIKE")
+        likes =self.post_reactions.filter(reaction="SAD")
         return likes.count()
     
     @cached_property
     def total_angry_reactions(self):
-        likes =self.post_reactions.filter(reaction="LIKE")
+        likes =self.post_reactions.filter(reaction="ANGRY")
         return likes.count()
 
     @cached_property
     def total_fire_reactions(self):
-        likes =self.post_reactions.filter(reaction="LIKE")
+        likes =self.post_reactions.filter(reaction="FIRE")
         return likes.count()
 
     @cached_property
     def total_taco_reactions(self):
-        likes =self.post_reactions.filter(reaction="LIKE")
+        likes =self.post_reactions.filter(reaction="TACO")
         return likes.count()
 
 
