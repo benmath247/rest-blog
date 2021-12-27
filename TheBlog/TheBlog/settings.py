@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     "social_django",
     "storages",
     "crispy_forms",
+    "django_elasticsearch_dsl",
 ]
 
 MIDDLEWARE = [
@@ -180,4 +181,11 @@ AUTH_USER_MODEL = "accounts.User"
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100
+}
+
+# ELASTIC SEARCH
+ELASTICSEARCH_DSL={
+    'default': {
+        'hosts': 'localhost:9200'
+    },
 }
