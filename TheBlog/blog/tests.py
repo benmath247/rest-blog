@@ -110,7 +110,8 @@ class CommentListTestCase(APITestCase):
     def test_get(self):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(len(res.json()["results"]), 10)
+        # import pdb; pdb.set_trace()
+        self.assertEqual(res.json()["count"], 10)
 
     def test_post(self):
         self.client.force_login(self.user)

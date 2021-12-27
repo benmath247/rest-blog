@@ -16,7 +16,7 @@ from blog.serializers import (CommentLikeSerializer, CommentSerializer,
                               PostSerializer, ReactionSerializer)
 
 ### PAGINATION
-class PostResultsPagination(PageNumberPagination):
+class ResultsPagination(PageNumberPagination):
     page_size = 5
     page_size_query_param = 'page_size'
     max_page_size = 5
@@ -30,7 +30,7 @@ class PostResultsPagination(PageNumberPagination):
 class PostListAPIView(ListCreateAPIView):
 
     serializer_class = PostSerializer
-    pagination_class = PostResultsPagination
+    pagination_class = ResultsPagination
     queryset = Post.objects.all()
 
 
@@ -69,6 +69,7 @@ class PostRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 # LIST/CREATE
 class LikeListAPIView(ListCreateAPIView):
     serializer_class = LikeSerializer
+    pagination_class = ResultsPagination
 
     def get_queryset(self, *args, **kwargs):
         post = get_object_or_404(Post, slug=self.kwargs.get("slug"))
@@ -91,7 +92,7 @@ class LikeRetrieveAPIView(RetrieveAPIView):
 
 # LIST/CREATE
 class CommentListAPIView(ListCreateAPIView):
-
+    pagination_class = ResultsPagination
     serializer_class = CommentSerializer
 
     def get_queryset(self, *args, **kwargs):
