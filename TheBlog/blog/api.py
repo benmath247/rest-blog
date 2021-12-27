@@ -9,10 +9,10 @@ from rest_framework.generics import (DestroyAPIView, ListCreateAPIView,
 from rest_framework.response import Response
 
 from blog.forms import CommentForm, PostCreateForm
-from blog.models import Comment, CommentLike, Like, Post
+from blog.models import Comment, CommentLike, Like, Post, PostReaction
 from blog.serializers import (CommentLikeSerializer, CommentSerializer,
                               LikeSerializer, PostCreateSerializer,
-                              PostSerializer)
+                              PostSerializer, ReactionSerializer)
 
 # RetrieveUpdateAPIView - get requests retrieves 1, put request updates 1
 # look at mixins 
@@ -127,3 +127,13 @@ class CommentLikeDestroyAPIView(DestroyAPIView):
 class CommentLikeRetrieveAPIView(RetrieveAPIView):
     serializer_class = CommentLikeSerializer
     queryset = CommentLike.objects.all()
+
+
+### REACTION CRUD ###
+
+# LIST/CREATE
+class ReactionListAPIView(ListCreateAPIView):
+    serializer_class = ReactionSerializer
+
+    def get_queryset(self, *args, **kwargs):
+        return PostReaction.objects.all()

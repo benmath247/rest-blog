@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from blog.models import Comment, CommentLike, Like, Post
+from blog.models import Comment, CommentLike, Like, Post,PostReaction
 
 all = '__all__'
 
@@ -26,4 +26,9 @@ class CommentLikeSerializer(serializers.ModelSerializer):
 class LikeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Like
+        fields = all
+
+class ReactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostReaction
         fields = all

@@ -1,5 +1,7 @@
 import factory
 
+import blog.models
+
 from accounts.factories import UserFactory
 
 
@@ -38,3 +40,11 @@ class CommentLikeFactory(factory.django.DjangoModelFactory):
     comment = factory.SubFactory(CommentFactory)
 
 
+
+class ReactionFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = "blog.PostReaction"
+
+    post = factory.SubFactory(PostFactory)
+    user = factory.SubFactory(UserFactory)
+    reaction = factory.Faker('random_choices', elements=blog.models.PostReaction.CHOICES)

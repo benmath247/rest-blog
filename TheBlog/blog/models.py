@@ -99,7 +99,7 @@ class CommentLike(models.Model):
 
 
 class PostReaction(models.Model):
-    choices = [
+    CHOICES = [
             ('👍', '👍'),
             ('💖', '💖'),
             ('😭', '😭'),
@@ -107,7 +107,7 @@ class PostReaction(models.Model):
             ('🔥', '🔥'),
             ('🌮', '🌮'),
             ]
-    reaction = models.CharField(max_length=10, choices=choices, null=True)
+    reaction = models.CharField(max_length=10, choices=CHOICES, null=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_reactions")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_reactions")
 

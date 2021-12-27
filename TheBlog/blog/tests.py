@@ -6,7 +6,7 @@ from rest_framework.test import APITestCase
 from accounts.factories import UserFactory
 from accounts.models import User
 from blog.factories import (CommentFactory, CommentLikeFactory, LikeFactory,
-                            PostFactory)
+                            PostFactory, ReactionFactory)
 from blog.models import Comment, CommentLike, Like, Post
 
 # Create your tests here.
@@ -305,3 +305,26 @@ class CommentLikeRetrieveAPITestCase(APITestCase):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json()["id"], 1)
+
+
+#REACTIONS
+class ReactionListTestCase(APITestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.post = PostFactory(author=self.user)
+        self.reaction = ReactionFactory(post=self.post, user=self.user)
+    
+    @property
+    def url(self):
+        return reverse('reaction-list-api-view', kwargs={"slug": self.post.slug})
+    
+    def test_get(self):
+        res = self.client.get(self.url)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(len(res.json()), 1)
+
+    # def test_post(self):
+    #     data = {"user": self.user.pk, "post": self.post.pk, "reaction":self.reaction.pk}
+    #     res = self.client.post(self.url, data=data)
+    #     self.assertEqual(res.status_code, 201)
+    #     self.assertEqual(len(Like.objects.all()), 2)
