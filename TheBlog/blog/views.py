@@ -153,8 +153,8 @@ def postreaction_view(request, pk):
         return render(request, "post_reaction.html", context={"reaction_form": form})
     if request.method == "POST":
         reaction = request.POST.get("reaction")
-        PostReaction.objects.create(post_id=pk, reaction=reaction, user=request.user)
-        return redirect("home")
+        reaction = PostReaction.objects.create(post_id=pk, reaction=reaction, user=request.user)
+        return redirect("post_detail", slug=reaction.post.slug)
     if request.method == "DELETE":
         reaction = get_object_or_404(PostReaction, pk=pk)
         post = get_object_or_404(Post, id=request.POST.get("reactions"))

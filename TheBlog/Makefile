@@ -6,3 +6,5 @@ run:
 test:
 	- python3 manage.py test
 
+up:
+	- docker-compose up -d

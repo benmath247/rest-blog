@@ -322,9 +322,3 @@ class ReactionListTestCase(APITestCase):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(len(res.json()), 1)
-
-    # def test_post(self):
-    #     data = {"user": self.user.pk, "post": self.post.pk, "reaction":self.reaction.pk}
-    #     res = self.client.post(self.url, data=data)
-    #     self.assertEqual(res.status_code, 201)
-    #     self.assertEqual(len(Like.objects.all()), 2)
