@@ -119,7 +119,7 @@ class CommentRetrieveAPIView(RetrieveUpdateAPIView):
 
 # LIST/CREATE
 class CommentLikeListAPIView(ListCreateAPIView):
-
+    pagination_class = ResultsPagination
     serializer_class = CommentLikeSerializer
 
     def get_queryset(self, *args, **kwargs):
