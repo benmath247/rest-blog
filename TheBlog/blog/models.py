@@ -2,7 +2,32 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.utils.text import slugify
 
+from elasticsearch_dsl import Q as ESQ
+
 from accounts.models import User
+
+
+class PostQuerySet(models.QuerySet):
+    def search(self, search_query):
+        from blog.documents import PostDocument
+
+        query = ESQ(
+            "multi_match", 
+            query=search_query, 
+            type="cross_fields", 
+            fields=["title"], 
+        )
+
+        # get post documents
+        res = PostDocument.search().query(query).execute() 
+        # get post ids from post documents
+        post_ids = []
+        for hit in res.hits:
+            post_ids.append(hit.id)
+        
+        # getting all of the post objects using the post ids found from the post documents 
+        posts = self.filter(id__in=post_ids)
+        return posts
 
 
 class Post(models.Model):
@@ -14,6 +39,7 @@ class Post(models.Model):
     content = models.TextField(blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to="images/", null=True, blank=True)
+    objects = PostQuerySet.as_manager()
 
     class Meta:
         ordering = ["-created_on"]
@@ -32,40 +58,40 @@ class Post(models.Model):
     @cached_property
     def total_comments(self):
         return self.comments.count()
-    
+
     @cached_property
     def total_likes_reactions(self):
-        likes =self.post_reactions.filter(reaction="👍")
+        likes = self.post_reactions.filter(reaction="👍")
         return likes.count()
-    
+
     @cached_property
     def total_loves_reactions(self):
-        loves =self.post_reactions.filter(reaction="💖")
+        loves = self.post_reactions.filter(reaction="💖")
         return loves.count()
 
     @cached_property
     def total_sad_reactions(self):
-        sads =self.post_reactions.filter(reaction="😭")
+        sads = self.post_reactions.filter(reaction="😭")
         return sads.count()
-    
+
     @cached_property
     def total_angry_reactions(self):
-        angrys =self.post_reactions.filter(reaction="😡")
+        angrys = self.post_reactions.filter(reaction="😡")
         return angrys.count()
 
     @cached_property
     def total_fire_reactions(self):
-        fires =self.post_reactions.filter(reaction="🔥")
+        fires = self.post_reactions.filter(reaction="🔥")
         return fires.count()
 
     @cached_property
     def total_taco_reactions(self):
-        tacos =self.post_reactions.filter(reaction="🌮")
+        tacos = self.post_reactions.filter(reaction="🌮")
         return tacos.count()
 
     @cached_property
     def total_reactions(self):
-        reactions =self.post_reactions.all()
+        reactions = self.post_reactions.all()
         return reactions.count()
 
 
@@ -108,21 +134,24 @@ class CommentLike(models.Model):
     class Meta:
         ordering = ["-created_on"]
 
+
 class PostReaction(models.Model):
     CHOICES = [
-            ('👍', '👍'),
-            ('💖', '💖'),
-            ('😭', '😭'),
-            ('😡', '😡'),
-            ('🔥', '🔥'),
-            ('🌮', '🌮'),
-            ]
+        ("👍", "👍"),
+        ("💖", "💖"),
+        ("😭", "😭"),
+        ("😡", "😡"),
+        ("🔥", "🔥"),
+        ("🌮", "🌮"),
+    ]
     reaction = models.CharField(max_length=10, choices=CHOICES, null=True)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_reactions")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_reactions")
+    post = models.ForeignKey(
+        Post, on_delete=models.CASCADE, related_name="post_reactions"
+    )
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="user_reactions"
+    )
     created_on = models.DateTimeField(auto_now_add=True, null=True)
 
     class Meta:
         ordering = ["-created_on"]
-
-
