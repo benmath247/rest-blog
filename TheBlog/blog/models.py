@@ -64,7 +64,7 @@ class Post(models.Model):
         return tacos.count()
 
     @cached_property
-    def total_taco_reactions(self):
+    def total_reactions(self):
         reactions =self.post_reactions.all()
         return reactions.count()
 

@@ -12,7 +12,7 @@
 <span>Posted: {{ post.created_on}} </span>
 
 <a href="{% url 'post_detail' post.slug  %}">Read More &rarr;</a>
-<br>
+<br>{% if post.total_reactions %}
 <br>Reactions: 
     {% if post.total_likes_reactions %}| {{ post.total_likes_reactions }} &#128077; {% endif %}
     {% if post.total_loves_reactions %}| {{ post.total_loves_reactions }} &#128150; {% endif %}
@@ -20,7 +20,7 @@
     {% if post.total_angry_reactions %}| {{ post.total_angry_reactions }} &#128545; {% endif %}
     {% if post.total_fire_reactions %}| {{ post.total_fire_reactions }} &#128293; {% endif %}
     {% if post.total_taco_reactions %}| {{ post.total_taco_reactions }} &#127790; {% endif %}
-
+{% endif %}
 <hr>
 {% endfor %}
 
