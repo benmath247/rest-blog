@@ -7,13 +7,9 @@ class AccountCreateForm(forms.ModelForm):
     class Meta:
         password = forms.CharField(widget=forms.PasswordInput)
         model = User
-        fields = [
-            "username",
-            "email",
-            "password"
-        ]
+        fields = ["username", "email", "password"]
         widgets = {
-            'password': forms.PasswordInput(),
+            "password": forms.PasswordInput(),
         }
 
 
@@ -25,5 +21,5 @@ class LoginForm(forms.ModelForm):
             "password",
         ]
         widgets = {
-            'password': forms.PasswordInput(),
+            "password": forms.PasswordInput(),
         }

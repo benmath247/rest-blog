@@ -25,10 +25,12 @@ def create_account(request):
                 password=request.POST.get("password"),
                 email=request.POST.get("email"),
             )
-            password=request.POST.get("password")
+            password = request.POST.get("password")
             user.set_password(password)
             user.save()
-            login_user(request, user, backend="django.contrib.auth.backends.ModelBackend")
+            login_user(
+                request, user, backend="django.contrib.auth.backends.ModelBackend"
+            )
     return redirect("home")
 
 
@@ -39,10 +41,12 @@ def login(request):
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
-        
+
         user = authenticate(request, username=username, password=password)
         if user:
-            login_user(request, user, backend="django.contrib.auth.backends.ModelBackend")
+            login_user(
+                request, user, backend="django.contrib.auth.backends.ModelBackend"
+            )
             return redirect("home")
         else:
             return render(

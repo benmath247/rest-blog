@@ -15,12 +15,13 @@ class UserListTestCase(APITestCase):
 
     @property
     def url(self):
-        return reverse('user-list-api-view')
+        return reverse("user-list-api-view")
 
     def test_get(self):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(len(User.objects.all()), 3)
+
 
 class UserDestroyTestCase(APITestCase):
     def setUp(self):
@@ -28,24 +29,24 @@ class UserDestroyTestCase(APITestCase):
 
     @property
     def url(self):
-        return reverse('user-destroy-api-view', kwargs={"pk": self.user.pk})
+        return reverse("user-destroy-api-view", kwargs={"pk": self.user.pk})
 
     def test_delete(self):
         res = self.client.delete(self.url)
         self.assertEqual(res.status_code, 204)
         self.assertEqual(len(User.objects.all()), 0)
 
+
 class UserRetrieveAPIView(APITestCase):
     def setUp(self):
         self.user = UserFactory()
-    
+
     @property
     def url(self):
-        return reverse('user-retrieve-api-view', kwargs={"pk": self.user.pk})
+        return reverse("user-retrieve-api-view", kwargs={"pk": self.user.pk})
 
     def test_get(self):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(len(User.objects.all()), 1)
-        self.assertEqual(res.json()['id'], 1)
-
+        self.assertEqual(res.json()["id"], 1)

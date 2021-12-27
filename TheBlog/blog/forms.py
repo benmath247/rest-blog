@@ -15,9 +15,10 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ["name", "comment"]
 
+
 class PostReactionForm(forms.ModelForm):
     class Meta:
         model = PostReaction
-        fields = ["reaction",]
-        
-        
+        fields = [
+            "reaction",
+        ]

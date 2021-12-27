@@ -6,13 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('blog', '0015_alter_postreaction_reaction'),
+        ("blog", "0015_alter_postreaction_reaction"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='postreaction',
-            name='reaction',
-            field=models.CharField(choices=[('👍', '👍'), ('💖', '💖'), ('😭', '😭'), ('😡', '😡'), ('🔥', '🔥'), ('🌮', '🌮')], max_length=10, null=True),
+            model_name="postreaction",
+            name="reaction",
+            field=models.CharField(
+                choices=[
+                    ("👍", "👍"),
+                    ("💖", "💖"),
+                    ("😭", "😭"),
+                    ("😡", "😡"),
+                    ("🔥", "🔥"),
+                    ("🌮", "🌮"),
+                ],
+                max_length=10,
+                null=True,
+            ),
         ),
     ]

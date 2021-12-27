@@ -12,20 +12,19 @@ class PostQuerySet(models.QuerySet):
         from blog.documents import PostDocument
 
         query = ESQ(
-            "multi_match", 
-            query=search_query, 
-            type="cross_fields", 
-            fields=["title"], 
+            "multi_match",
+            query=search_query,
+            type="cross_fields",
+            fields=["title"],
         )
 
         # get post documents
-        res = PostDocument.search().query(query).execute() 
-        # get post ids from post documents
+        res = (
+            PostDocument.search().query(query).execute()
+        )
         post_ids = []
         for hit in res.hits:
             post_ids.append(hit.id)
-        
-        # getting all of the post objects using the post ids found from the post documents 
         posts = self.filter(id__in=post_ids)
         return posts
 

@@ -17,15 +17,15 @@ class LikeAdmin(admin.ModelAdmin):
     list_display = ("user", "post")
     list_filter = ("user", "post")
 
+
 admin.site.register(Like, LikeAdmin)
 
 
 class PostReactionAdmin(admin.ModelAdmin):
     list_display = ("user", "post", "reaction")
 
+
 admin.site.register(PostReaction, PostReactionAdmin)
-
-
 
 
 class CommentAdmin(admin.ModelAdmin):

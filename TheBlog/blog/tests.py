@@ -1,15 +1,20 @@
-
 from django.shortcuts import reverse
 from django.test import TestCase
 from rest_framework.test import APITestCase
 
 from accounts.factories import UserFactory
 from accounts.models import User
-from blog.factories import (CommentFactory, CommentLikeFactory, LikeFactory,
-                            PostFactory, ReactionFactory)
+from blog.factories import (
+    CommentFactory,
+    CommentLikeFactory,
+    LikeFactory,
+    PostFactory,
+    ReactionFactory,
+)
 from blog.models import Comment, CommentLike, Like, Post
 
 # Create your tests here.
+
 
 class PostListTestCase(APITestCase):
     def setUp(self):
@@ -18,7 +23,7 @@ class PostListTestCase(APITestCase):
 
         self.post_2 = PostFactory(author=user)
         self.post_3 = PostFactory(author=user)
-        self.user=user
+        self.user = user
 
     @property
     def url(self):
@@ -39,6 +44,7 @@ class PostListTestCase(APITestCase):
         self.assertEqual(res.status_code, 201)
         self.assertEqual(len(Post.objects.all()), 4)
 
+
 class PostDestroyTestCase(APITestCase):
     def setUp(self):
         # user = User.objects.create(email="example@gmail.com")
@@ -56,6 +62,7 @@ class PostDestroyTestCase(APITestCase):
         res = self.client.delete(self.url)
         self.assertEqual(res.status_code, 204)
         self.assertEqual(len(Post.objects.all()), 0)
+
 
 class PostRetrieveTestCase(APITestCase):
     def setUp(self):
@@ -76,10 +83,15 @@ class PostRetrieveTestCase(APITestCase):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.json()["id"], self.post.id)
-    
+
     def test_put(self):
         self.client.force_login(self.user)
-        data = {"title": "title", "content": "content2", "slug":"slug", "author":self.user.pk}
+        data = {
+            "title": "title",
+            "content": "content2",
+            "slug": "slug",
+            "author": self.user.pk,
+        }
         res = self.client.put(self.url, data=data)
         self.assertEqual(res.status_code, 200)
         self.post.refresh_from_db()
@@ -123,6 +135,7 @@ class CommentListTestCase(APITestCase):
         self.assertEqual(res.status_code, 201)
         self.assertEqual(len(Comment.objects.all()), 11)
 
+
 class CommentDestroyTestCase(APITestCase):
     def setUp(self):
         # user = User.objects.create(email="example@gmail.com")
@@ -135,7 +148,7 @@ class CommentDestroyTestCase(APITestCase):
         user = UserFactory()
         self.post = PostFactory(author=user)
         self.post_comment = CommentFactory(post=self.post)
-    
+
     @property
     def url(self):
         return reverse("comment-destroy-api-view", kwargs={"pk": self.post_comment.pk})
@@ -144,15 +157,16 @@ class CommentDestroyTestCase(APITestCase):
         res = self.client.delete(self.url)
         self.assertEqual(res.status_code, 204)
 
+
 class CommentRetrieveTestCase(APITestCase):
     def setUp(self):
         self.user = UserFactory()
         self.post = PostFactory(author=self.user)
         self.comment = CommentFactory(post=self.post, user=self.user)
-    
+
     @property
     def url(self):
-        return reverse('comment-retrieve-api-view', kwargs={"pk": self.comment.pk})
+        return reverse("comment-retrieve-api-view", kwargs={"pk": self.comment.pk})
 
     def test_get(self):
         self.client.force_login(self.user)
@@ -177,11 +191,11 @@ class LikeListTestCase(APITestCase):
         self.user = UserFactory()
         self.post = PostFactory(author=self.user)
         self.like = LikeFactory(post=self.post, user=self.user)
-    
+
     @property
     def url(self):
-        return reverse('like-list-api-view', kwargs={"slug": self.post.slug})
-    
+        return reverse("like-list-api-view", kwargs={"slug": self.post.slug})
+
     def test_get(self):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
@@ -198,6 +212,7 @@ class LikeListTestCase(APITestCase):
         self.assertEqual(res.status_code, 201)
         self.assertEqual(len(Like.objects.all()), 2)
 
+
 class LikeDestroyTestCase(APITestCase):
     def setUp(self):
         # user = User.objects.create(email="example@gmail.com")
@@ -206,7 +221,7 @@ class LikeDestroyTestCase(APITestCase):
         user = UserFactory()
         self.post = PostFactory(author=user)
         self.like = LikeFactory(post=self.post, user=user)
-    
+
     @property
     def url(self):
         return reverse("like-destroy-api-view", kwargs={"pk": self.like.pk})
@@ -216,15 +231,16 @@ class LikeDestroyTestCase(APITestCase):
         self.assertEqual(res.status_code, 204)
         self.assertEqual(len(Like.objects.all()), 0)
 
+
 class LikeRetrieveTestCase(APITestCase):
     def setUp(self):
         self.user = UserFactory()
         self.post = PostFactory(author=self.user)
         self.like = LikeFactory(post=self.post, user=self.user)
-    
+
     @property
     def url(self):
-        return reverse('like-retrieve-api-view', kwargs = {"pk": self.like.pk})
+        return reverse("like-retrieve-api-view", kwargs={"pk": self.like.pk})
 
     def test_get(self):
         res = self.client.get(self.url)
@@ -248,7 +264,7 @@ class CommentLikeListTestCase(APITestCase):
 
     @property
     def url(self):
-        return reverse('comment-like-list-api-view', kwargs ={"pk": self.comment.pk})
+        return reverse("comment-like-list-api-view", kwargs={"pk": self.comment.pk})
 
     def test_get(self):
         res = self.client.get(self.url)
@@ -268,7 +284,8 @@ class CommentLikeListTestCase(APITestCase):
         res = self.client.post(self.url, data=data)
         self.assertEqual(res.status_code, 201)
         self.assertEqual(len(CommentLike.objects.all()), 2)
-        
+
+
 class CommentLikeDestroyTestCase(APITestCase):
     def setUp(self):
         # user = User.objects.create(email="example@gmail.com")
@@ -284,12 +301,13 @@ class CommentLikeDestroyTestCase(APITestCase):
 
     @property
     def url(self):
-        return reverse('comment-like-destroy-api-view', kwargs ={"pk": self.comment.pk})
+        return reverse("comment-like-destroy-api-view", kwargs={"pk": self.comment.pk})
 
     def test_delete(self):
         res = self.client.delete(self.url)
         self.assertEqual(res.status_code, 204)
         self.assertEqual(len(CommentLike.objects.all()), 0)
+
 
 class CommentLikeRetrieveAPITestCase(APITestCase):
     def setUp(self):
@@ -297,10 +315,12 @@ class CommentLikeRetrieveAPITestCase(APITestCase):
         self.post = PostFactory(author=self.user)
         self.comment = CommentFactory(post=self.post)
         self.comment_like = CommentLikeFactory(comment=self.comment, user=self.user)
-    
+
     @property
     def url(self):
-        return reverse('comment-like-retrieve-api-view', kwargs = {"pk": self.comment_like.pk})
+        return reverse(
+            "comment-like-retrieve-api-view", kwargs={"pk": self.comment_like.pk}
+        )
 
     def test_get(self):
         res = self.client.get(self.url)
@@ -308,17 +328,17 @@ class CommentLikeRetrieveAPITestCase(APITestCase):
         self.assertEqual(res.json()["id"], 1)
 
 
-#REACTIONS
+# REACTIONS
 class ReactionListTestCase(APITestCase):
     def setUp(self):
         self.user = UserFactory()
         self.post = PostFactory(author=self.user)
         self.reaction = ReactionFactory(post=self.post, user=self.user)
-    
+
     @property
     def url(self):
-        return reverse('reaction-list-api-view', kwargs={"slug": self.post.slug})
-    
+        return reverse("reaction-list-api-view", kwargs={"slug": self.post.slug})
+
     def test_get(self):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)

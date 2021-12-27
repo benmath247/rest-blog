@@ -16,5 +16,5 @@ urlpatterns = [
         views.like_a_comment_view,
         name="like_comment",
     ),
-    path("crypto/", views.bitcoin_price, name="crypto")
+    path("crypto/", views.bitcoin_price, name="crypto"),
 ]

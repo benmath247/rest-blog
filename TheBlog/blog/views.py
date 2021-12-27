@@ -8,12 +8,17 @@ from blog.models import Comment, CommentLike, Like, Post, PostReaction
 
 
 def bitcoin_price(request):
-    response = requests.get('https://api.coindesk.com/v1/bpi/currentprice.json')
+    response = requests.get("https://api.coindesk.com/v1/bpi/currentprice.json")
     data = response.json()
     usd = data["bpi"]["USD"]["rate"]
     gbp = data["bpi"]["GBP"]["rate"]
     eur = data["bpi"]["EUR"]["rate"]
-    return render(request, "bitcoin_price.html", context={"usd_btc": usd, "gbp_btc": gbp, "eur_btc": eur})
+    return render(
+        request,
+        "bitcoin_price.html",
+        context={"usd_btc": usd, "gbp_btc": gbp, "eur_btc": eur},
+    )
+
 
 #### POST MODEL CRUD ###
 def post_list(request):
@@ -28,11 +33,15 @@ def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
     comment_form = CommentForm()
     reaction_form = PostReactionForm()
-    
+
     return render(
         request,
         "post_detail.html",
-        context={"post": post, "comment_form": comment_form, "reaction_form": reaction_form}
+        context={
+            "post": post,
+            "comment_form": comment_form,
+            "reaction_form": reaction_form,
+        },
     )
 
 
@@ -49,10 +58,7 @@ def post_create(request):
         image = request.FILES.get("image")
         # Create a new Post object
         Post.objects.create(
-            author=request.user,
-            title=title,
-            content=content,
-            image=image
+            author=request.user, title=title, content=content, image=image
         )
         return redirect("home")
 
@@ -153,7 +159,9 @@ def postreaction_view(request, pk):
         return render(request, "post_reaction.html", context={"reaction_form": form})
     if request.method == "POST":
         reaction = request.POST.get("reaction")
-        reaction = PostReaction.objects.create(post_id=pk, reaction=reaction, user=request.user)
+        reaction = PostReaction.objects.create(
+            post_id=pk, reaction=reaction, user=request.user
+        )
         return redirect("post_detail", slug=reaction.post.slug)
     if request.method == "DELETE":
         reaction = get_object_or_404(PostReaction, pk=pk)
