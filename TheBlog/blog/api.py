@@ -7,12 +7,20 @@ from rest_framework.decorators import api_view
 from rest_framework.generics import (DestroyAPIView, ListCreateAPIView,
                                      RetrieveAPIView, RetrieveUpdateAPIView)
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from blog.forms import CommentForm, PostCreateForm
 from blog.models import Comment, CommentLike, Like, Post, PostReaction
 from blog.serializers import (CommentLikeSerializer, CommentSerializer,
                               LikeSerializer, PostCreateSerializer,
                               PostSerializer, ReactionSerializer)
+
+### PAGINATION
+class PostResultsPagination(PageNumberPagination):
+    page_size = 5
+    page_size_query_param = 'page_size'
+    max_page_size = 5
+
 
 # RetrieveUpdateAPIView - get requests retrieves 1, put request updates 1
 # look at mixins 
@@ -22,6 +30,7 @@ from blog.serializers import (CommentLikeSerializer, CommentSerializer,
 class PostListAPIView(ListCreateAPIView):
 
     serializer_class = PostSerializer
+    pagination_class = PostResultsPagination
     queryset = Post.objects.all()
 
 

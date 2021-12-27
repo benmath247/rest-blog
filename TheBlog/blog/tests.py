@@ -28,9 +28,9 @@ class PostListTestCase(APITestCase):
         res = self.client.get(self.url)
 
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(res.json()[0]["title"], self.post_3.title)
-        self.assertEqual(res.json()[1]["title"], self.post_2.title)
-        self.assertEqual(res.json()[2]["title"], self.post_1.title)
+        self.assertEqual(res.json()["results"][0]["title"], self.post_3.title)
+        self.assertEqual(res.json()["results"][1]["title"], self.post_2.title)
+        self.assertEqual(res.json()["results"][2]["title"], self.post_1.title)
 
     def test_post(self):
         self.client.force_login(self.user)
@@ -110,7 +110,7 @@ class CommentListTestCase(APITestCase):
     def test_get(self):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(len(res.json()), 10)
+        self.assertEqual(len(res.json()["results"]), 10)
 
     def test_post(self):
         self.client.force_login(self.user)
@@ -184,7 +184,7 @@ class LikeListTestCase(APITestCase):
     def test_get(self):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(len(res.json()), 1)
+        self.assertEqual(len(res.json()["results"]), 1)
 
     def test_post(self):
         # self.user = User.objects.get(email="example@gmail.com")
@@ -252,7 +252,7 @@ class CommentLikeListTestCase(APITestCase):
     def test_get(self):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(len(res.json()), 1)
+        self.assertEqual(len(res.json()["results"]), 1)
 
     def test_post(self):
         self.user = UserFactory()
@@ -321,4 +321,5 @@ class ReactionListTestCase(APITestCase):
     def test_get(self):
         res = self.client.get(self.url)
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(len(res.json()), 1)
+        # import pdb; pdb.set_trace()
+        self.assertEqual(len(res.json()["results"]), 1)
