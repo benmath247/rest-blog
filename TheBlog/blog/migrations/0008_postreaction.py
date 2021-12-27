@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             name='PostReaction',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('reactions', models.CharField(choices=[('LIKE', 'Like'), ('LOVE', 'Love'), ('SAD', 'Sad'), ('ANGRY', 'Angry'), ('FIRE', 'Fire'), ('CLAP', 'Clap')], default=None, max_length=10)),
+                ('reactions', models.CharField(choices=[('LIKE', 'Like'), ('LOVE', 'Love'), ('SAD', 'Sad'), ('ANGRY', 'Angry'), ('FIRE', 'Fire'), ('TACO', 'TACO')], default=None, max_length=10)),
                 ('post', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='post_reactions', to='blog.post')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='user_reactions', to='accounts.user')),
             ],

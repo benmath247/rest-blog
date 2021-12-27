@@ -35,7 +35,33 @@ class Post(models.Model):
     
     @cached_property
     def total_likes_reactions(self):
-        return self.post_reactions.filter(reaction='LIKE').count()
+        likes =self.post_reactions.filter(reaction="LIKE")
+        return likes.count()
+    
+    @cached_property
+    def total_loves_reactions(self):
+        likes =self.post_reactions.filter(reaction="LIKE")
+        return likes.count()
+
+    @cached_property
+    def total_sad_reactions(self):
+        likes =self.post_reactions.filter(reaction="LIKE")
+        return likes.count()
+    
+    @cached_property
+    def total_angry_reactions(self):
+        likes =self.post_reactions.filter(reaction="LIKE")
+        return likes.count()
+
+    @cached_property
+    def total_fire_reactions(self):
+        likes =self.post_reactions.filter(reaction="LIKE")
+        return likes.count()
+
+    @cached_property
+    def total_taco_reactions(self):
+        likes =self.post_reactions.filter(reaction="LIKE")
+        return likes.count()
 
 
 class Comment(models.Model):
@@ -74,7 +100,7 @@ class PostReaction(models.Model):
             ('SAD', 'SAD'),
             ('ANGRY', 'ANGRY'),
             ('FIRE', 'FIRE'),
-            ('CLAP', 'CLAP'),
+            ('TACO', 'TACO'),
             ]
     reaction = models.CharField(max_length=10, choices=choices, null=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_reactions")
