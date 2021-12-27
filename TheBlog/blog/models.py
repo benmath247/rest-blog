@@ -35,33 +35,38 @@ class Post(models.Model):
     
     @cached_property
     def total_likes_reactions(self):
-        likes =self.post_reactions.filter(reaction="LIKE")
+        likes =self.post_reactions.filter(reaction="👍")
         return likes.count()
     
     @cached_property
     def total_loves_reactions(self):
-        likes =self.post_reactions.filter(reaction="LOVE")
-        return likes.count()
+        loves =self.post_reactions.filter(reaction="💖")
+        return loves.count()
 
     @cached_property
     def total_sad_reactions(self):
-        likes =self.post_reactions.filter(reaction="SAD")
-        return likes.count()
+        sads =self.post_reactions.filter(reaction="😭")
+        return sads.count()
     
     @cached_property
     def total_angry_reactions(self):
-        likes =self.post_reactions.filter(reaction="ANGRY")
-        return likes.count()
+        angrys =self.post_reactions.filter(reaction="😡")
+        return angrys.count()
 
     @cached_property
     def total_fire_reactions(self):
-        likes =self.post_reactions.filter(reaction="FIRE")
-        return likes.count()
+        fires =self.post_reactions.filter(reaction="🔥")
+        return fires.count()
 
     @cached_property
     def total_taco_reactions(self):
-        likes =self.post_reactions.filter(reaction="TACO")
-        return likes.count()
+        tacos =self.post_reactions.filter(reaction=" 🌮")
+        return tacos.count()
+
+    @cached_property
+    def total_taco_reactions(self):
+        reactions =self.post_reactions.all()
+        return reactions.count()
 
 
 class Comment(models.Model):
@@ -95,12 +100,12 @@ class CommentLike(models.Model):
 
 class PostReaction(models.Model):
     choices = [
-            ('LIKE', 'LIKE'),
-            ('LOVE', 'LOVE'),
-            ('SAD', 'SAD'),
-            ('ANGRY', 'ANGRY'),
-            ('FIRE', 'FIRE'),
-            ('TACO', 'TACO'),
+            ('👍', '👍'),
+            ('💖', '💖'),
+            ('😭', '😭'),
+            ('😡', '😡'),
+            ('🔥', '🔥'),
+            ('🌮', '🌮'),
             ]
     reaction = models.CharField(max_length=10, choices=choices, null=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_reactions")

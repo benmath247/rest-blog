@@ -28,8 +28,8 @@
     </button>
 </form>
   </form>
-    <br>Reactions: 
-    {% if post.total_likes_reactions %}| {{ post.total_likes_reactions }} &#128077; {% endif %}
+    <br>Reactions 
+    {% if post.total_likes_reactions %}{{ post.total_likes_reactions }} &#128077; {% endif %}
     {% if post.total_loves_reactions %}| {{ post.total_loves_reactions }} &#128150; {% endif %}
     {% if post.total_sad_reactions %}| {{ post.total_sad_reactions }} &#128557; {% endif %}
     {% if post.total_angry_reactions %}| {{ post.total_angry_reactions }} &#128545; {% endif %}
