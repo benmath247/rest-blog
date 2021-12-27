@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import widgets
 
 from blog.models import Comment, Post, PostReaction
 
@@ -17,4 +18,6 @@ class CommentForm(forms.ModelForm):
 class PostReactionForm(forms.ModelForm):
     class Meta:
         model = PostReaction
-        fields = ["reaction"]
+        fields = ["reaction",]
+        
+        

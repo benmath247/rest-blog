@@ -5,15 +5,30 @@
 <h1>{{ post.title }}</h1>
 {{ post.author }}| {{ post.created_on }}</p>
 <p>{{ post.content | safe }}</p>
+{% if post.image %}
 {{ post.image.url}}
 <img src="{{ post.image.url }}">
-
+{% endif %}
 
 <!--Likes-->
 <div>
   <form action="{% url 'like_post' post.pk %}" method="POST">{% csrf_token %}<button type="submit" , name="post_id" ,
       value="{{ post.id }}">Like
     </button> - {{ post.total_likes }} likes</form>
+</div>
+
+<div>
+
+  <!--reactions-->
+  <form action="." method="POST" role="form">
+    {% csrf_token %}
+    {{ reaction_form }}
+    <button type="submit" class="btn btn-primary">
+        react
+    </button>
+</form>
+  </form>
+    <br>{% if post.total_likes_reactions %}Reactions:<br>- {{ post.total_likes_reactions }} likes {% endif %}
 </div>
 
 <!-- comments-->

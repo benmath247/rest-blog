@@ -1,7 +1,6 @@
 import requests
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
-from TheBlog.blog.models import PostReaction
 
 
 from blog.forms import CommentForm, PostCreateForm, PostReactionForm
@@ -28,10 +27,12 @@ def post_detail(request, slug):
     # slug is used to define which Post object will display
     post = get_object_or_404(Post, slug=slug)
     comment_form = CommentForm()
+    reaction_form = PostReactionForm()
+    
     return render(
         request,
         "post_detail.html",
-        context={"post": post, "comment_form": comment_form}
+        context={"post": post, "comment_form": comment_form, "reaction_form": reaction_form}
     )
 
 
@@ -146,16 +147,16 @@ def delete_comment_like(request, pk):
 
 
 #### POSTREACTION MODEL CRUD ####
-def reaction_view(request, pk):
+def postreaction_view(request, pk):
     if request.method == "GET":
         form = PostReactionForm()
         return render(request, "post_reaction.html", context={"reaction_form": form})
     if request.method == "POST":
-        post = get_object_or_404(Post, id=request.POST.get("post_id"))
-        PostReaction.objects.create(post=post, user=request.user)
-        return redirect("post_detail", slug=post.slug)
+        reaction = request.POST.get("reaction")
+        PostReaction.objects.create(post_id=pk, reaction=reaction, user=request.user)
+        return redirect("home")
     if request.method == "DELETE":
         reaction = get_object_or_404(PostReaction, pk=pk)
-        post = get_object_or_404(Post, id=request.POST.get("post_id"))
+        post = get_object_or_404(Post, id=request.POST.get("reactions"))
         reaction.delete()
         return redirect("post_detail", slug=post.slug)

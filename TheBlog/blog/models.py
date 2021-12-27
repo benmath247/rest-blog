@@ -32,6 +32,10 @@ class Post(models.Model):
     @cached_property
     def total_comments(self):
         return self.comments.count()
+    
+    @cached_property
+    def total_likes_reactions(self):
+        return self.post_reactions.filter(reaction='LIKE').count()
 
 
 class Comment(models.Model):
@@ -62,16 +66,18 @@ class CommentLike(models.Model):
         User, on_delete=models.CASCADE, related_name="comment_likes"
     )
 
-class PostReaction(models.Model):
-    class Reactions(models.TextChoices):
-        LIKE = 'LIKE'
-        LOVE = 'LOVE'
-        SAD = 'SAD'
-        ANGRY = 'ANGRY'
-        FIRE = 'FIRE'
-        CLAP = 'CLAP'
 
-    reaction = models.CharField(max_length=10,choices=Reactions.choices, null=True)
+class PostReaction(models.Model):
+    choices = [
+            ('LIKE', 'LIKE'),
+            ('LOVE', 'LOVE'),
+            ('SAD', 'SAD'),
+            ('ANGRY', 'ANGRY'),
+            ('FIRE', 'FIRE'),
+            ('CLAP', 'CLAP'),
+            ]
+    reaction = models.CharField(max_length=10, choices=choices, null=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_reactions")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_reactions")
+
 
