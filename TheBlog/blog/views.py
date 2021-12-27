@@ -152,7 +152,6 @@ def postreaction_view(request, pk):
         form = PostReactionForm()
         return render(request, "post_reaction.html", context={"reaction_form": form})
     if request.method == "POST":
-        import pdb; pdb.set_trace()
         reaction = request.POST.get("reaction")
         PostReaction.objects.create(post_id=pk, reaction=reaction, user=request.user)
         return redirect("home")

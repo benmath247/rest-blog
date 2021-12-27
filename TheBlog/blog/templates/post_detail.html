@@ -20,15 +20,14 @@
 <div>
 
   <!--reactions-->
-  <form action="." method="POST" role="form">
+  <form action="{% url 'reaction_post' post.pk %}" method="POST" role="form">
     {% csrf_token %}
     {{ reaction_form }}
-    <button type="submit" class="btn btn-primary">
+    <button type="submit" value="{{ post.id }}"  name="post_id">
         react
     </button>
 </form>
   </form>
-  &#128077;
     <br>Reactions: 
     {% if post.total_likes_reactions %}| {{ post.total_likes_reactions }} &#128077; {% endif %}
     {% if post.total_loves_reactions %}| {{ post.total_loves_reactions }} &#128150; {% endif %}
