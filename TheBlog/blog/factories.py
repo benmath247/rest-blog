@@ -36,3 +36,5 @@ class CommentLikeFactory(factory.django.DjangoModelFactory):
 
     user = factory.SubFactory(UserFactory)
     comment = factory.SubFactory(CommentFactory)
+
+
