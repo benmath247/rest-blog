@@ -60,7 +60,7 @@ class Post(models.Model):
 
     @cached_property
     def total_taco_reactions(self):
-        tacos =self.post_reactions.filter(reaction=" 🌮")
+        tacos =self.post_reactions.filter(reaction="🌮")
         return tacos.count()
 
     @cached_property
@@ -73,10 +73,13 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
     name = models.CharField(max_length=25)
     comment = models.CharField(max_length=180, null=True)
-    date_added = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(auto_now_add=True, null=True)
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, related_name="comments"
     )
+
+    class Meta:
+        ordering = ["-created_on"]
 
     def __str__(self):
         return "%s = %s" % (self.post.title, self.name)
@@ -89,6 +92,10 @@ class Comment(models.Model):
 class Like(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="post_likes")
+    created_on = models.DateTimeField(auto_now_add=True, null=True)
+
+    class Meta:
+        ordering = ["-created_on"]
 
 
 class CommentLike(models.Model):
@@ -96,7 +103,10 @@ class CommentLike(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="comment_likes"
     )
+    created_on = models.DateTimeField(auto_now_add=True, null=True)
 
+    class Meta:
+        ordering = ["-created_on"]
 
 class PostReaction(models.Model):
     CHOICES = [
@@ -110,5 +120,9 @@ class PostReaction(models.Model):
     reaction = models.CharField(max_length=10, choices=CHOICES, null=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_reactions")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_reactions")
+    created_on = models.DateTimeField(auto_now_add=True, null=True)
+
+    class Meta:
+        ordering = ["-created_on"]
 
 

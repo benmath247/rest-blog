@@ -23,7 +23,7 @@
   <form action="{% url 'reaction_post' post.pk %}" method="POST" role="form">
     {% csrf_token %}
     {{ reaction_form }}
-    <button type="submit" value="{{ post.id }}"  name="post_id">
+    <button type="submit" name="post_id">
         react
     </button>
 </form>
